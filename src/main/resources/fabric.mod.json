@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "musketmod",
+  "version": "${version}",
+  "name": "Musket Modr",
+  "description": "Simple mod that adds a craftable musket",
+  "authors": [
+    "ewewukek"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ewewukek.musketmod.MusketMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "minecraft": "1.16.x"
+  }
+}
