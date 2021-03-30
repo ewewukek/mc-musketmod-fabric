@@ -1,11 +1,15 @@
 package ewewukek.musketmod;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Hand;
@@ -186,13 +190,17 @@ public class MusketItem extends Item {
         Vec3d playerMotion = player.getVelocity();
         motion.add(playerMotion.x, player.isOnGround() ? 0 : playerMotion.y, playerMotion.z);
 
-//        BulletEntity bullet = new BulletEntity(worldIn);
-//        bullet.setShooter(player);
-//        bullet.setPosition(pos.x, pos.y, pos.z);
-//        bullet.setMotion(motion);
-//        bullet.doFireParticles = true;
-//
-//        worldIn.addEntity(bullet);
+        BulletEntity bullet = new BulletEntity(worldIn);
+        bullet.setOwner(player);
+        bullet.setPos(pos.x, pos.y, pos.z);
+        bullet.setVelocity(motion);
+        bullet.doFireParticles = true;
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        bullet.writeSpawnData(buf);
+        ServerPlayNetworking.send((ServerPlayerEntity) player, MusketMod.SPAWN_BULLET_PACKET_ID, buf);
+
+        worldIn.spawnEntity(bullet);
     }
 
     private void setLoaded(ItemStack stack, boolean loaded) {

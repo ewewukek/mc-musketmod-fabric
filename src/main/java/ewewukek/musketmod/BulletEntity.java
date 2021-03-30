@@ -12,6 +12,7 @@ import net.minecraft.entity.damage.ProjectileDamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -209,30 +210,39 @@ public class BulletEntity extends ThrownEntity {
         super.writeCustomDataToTag(compound);
         compound.putShort("ticksLeft", ticksLeft);
     }
-/*
-https://fabricmc.net/wiki/tutorial:projectiles
 
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    public void writeSpawnData(PacketByteBuf data) {
+        data.writeVarInt(getEntityId());
+        data.writeUuid(getUuid());
 
-    @Override
-    public void writeSpawnData(PacketBuffer data) {
-        data.writeShort(ticksLeft);
-        data.writeByte(doFireParticles ? 1 : 0);
-        Vector3d motion = getMotion();
+        data.writeDouble(getX());
+        data.writeDouble(getY());
+        data.writeDouble(getZ());
+
+        Vec3d motion = getVelocity();
         data.writeFloat((float)motion.x);
         data.writeFloat((float)motion.y);
         data.writeFloat((float)motion.z);
+
+        data.writeShort(ticksLeft);
+        data.writeByte(doFireParticles ? 1 : 0);
     }
 
-    @Override
-    public void readSpawnData(PacketBuffer data) {
+    public void readSpawnData(PacketByteBuf data) {
+        setEntityId(data.readVarInt());
+        setUuid(data.readUuid());
+
+        double x = data.readDouble();
+        double y = data.readDouble();
+        double z = data.readDouble();
+        setPos(x, y, z);
+        updateTrackedPosition(x, y, z);
+        refreshPositionAfterTeleport(x, y, z);
+
+        Vec3d motion = new Vec3d(data.readFloat(), data.readFloat(), data.readFloat());
+        setVelocity(motion);
+
         ticksLeft = data.readShort();
-        doFireParticles = data.readByte() != 0 ? true : false;
-        Vector3d motion = new Vector3d(data.readFloat(), data.readFloat(), data.readFloat());
-        setMotion(motion);
+        doFireParticles = data.readByte() != 0;
     }
-*/
 }
