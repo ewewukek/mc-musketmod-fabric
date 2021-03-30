@@ -12,6 +12,9 @@
   "entrypoints": {
     "main": [
       "ewewukek.musketmod.MusketMod"
+    ],
+    "client": [
+      "ewewukek.musketmod.ClientSetup"
     ]
   },
   "depends": {
