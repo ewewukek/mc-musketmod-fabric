@@ -1,6 +1,10 @@
 package ewewukek.musketmod;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.SoundEvent;
@@ -20,6 +24,15 @@ public class MusketMod implements ModInitializer {
     public static final SoundEvent SOUND_MUSKET_LOAD_2 = new SoundEvent(new Identifier(MODID, "musket_load2"));
     public static final SoundEvent SOUND_MUSKET_READY = new SoundEvent(new Identifier(MODID, "musket_ready"));
     public static final SoundEvent SOUND_MUSKET_FIRE = new SoundEvent(new Identifier(MODID, "musket_fire"));
+
+    public static final EntityType<BulletEntity> BULLET_ENTITY_TYPE = Registry.register(
+        Registry.ENTITY_TYPE,
+        new Identifier(MODID, "bullet"),
+        FabricEntityTypeBuilder.<BulletEntity>create(SpawnGroup.MISC, BulletEntity::new)
+                .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
+                .trackRangeBlocks(64).trackedUpdateRate(5)
+                .build()
+    );
 
     @Override
     public void onInitialize() {
