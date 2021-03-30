@@ -29,6 +29,7 @@ public class BulletEntity extends ThrownEntity {
     static final double GRAVITY = 0.05;
     static final double AIR_FRICTION = 0.99;
     static final double WATER_FRICTION = 0.6;
+    static final short LIFETIME = 50;
 
     public static float damageFactorMin;
     public static float damageFactorMax;
@@ -38,10 +39,11 @@ public class BulletEntity extends ThrownEntity {
 
     public BulletEntity(EntityType<BulletEntity>entityType, World world) {
         super(entityType, world);
+        ticksLeft = LIFETIME;
     }
 
     public BulletEntity(World world) {
-        super(MusketMod.BULLET_ENTITY_TYPE, world);
+        this(MusketMod.BULLET_ENTITY_TYPE, world);
     }
 
     public DamageSource causeMusketDamage(BulletEntity bullet, Entity attacker) {
