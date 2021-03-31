@@ -22,7 +22,7 @@ public class MixinHeldItemRenderer {
         cancellable = true
     )
     private void renderFirstPersonItem(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack stack, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (stack.getItem() == MusketMod.MUSKET) {
+        if (hand == Hand.MAIN_HAND && stack.getItem() == MusketMod.MUSKET) {
             RenderHelper.renderSpecificFirstPersonHand((HeldItemRenderer)(Object)this, player, hand, tickDelta, pitch, swingProgress, equipProgress, stack, matrices,vertexConsumers, light);
             ci.cancel();
         }

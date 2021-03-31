@@ -21,7 +21,7 @@ public class MixinPlayerEntityRenderer {
         cancellable = true
     )
     private static void getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> ci) {
-        if (!player.handSwinging) {
+        if (!player.handSwinging && hand == Hand.MAIN_HAND) {
             ItemStack stack = player.getStackInHand(hand);
             if (!stack.isEmpty() && stack.getItem() == MusketMod.MUSKET && MusketItem.isLoaded(stack)) {
                 ci.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
