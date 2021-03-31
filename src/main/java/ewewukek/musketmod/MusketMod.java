@@ -31,6 +31,7 @@ public class MusketMod implements ModInitializer {
         FabricEntityTypeBuilder.<BulletEntity>create(SpawnGroup.MISC, BulletEntity::new)
                 .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
                 .trackRangeBlocks(64).trackedUpdateRate(5)
+                .forceTrackedVelocityUpdates(false)
                 .build()
     );
 
