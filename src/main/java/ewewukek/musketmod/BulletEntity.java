@@ -18,7 +18,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -114,7 +113,7 @@ public class BulletEntity extends ThrownEntity {
         Vec3d from = getPos();
         Vec3d to = from.add(getVelocity());
 
-        HitResult collision = world.raycast(
+        BlockHitResult collision = world.raycast(
             new RaycastContext(from, to, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
 
         // prevents hitting entities behind an obstacle
@@ -139,9 +138,8 @@ public class BulletEntity extends ThrownEntity {
 
         if (collision.getType() != HitResult.Type.BLOCK) return false;
 
-        BlockPos blockPos = ((BlockHitResult)collision).getBlockPos();
-        BlockState blockstate = world.getBlockState(blockPos);
-        blockstate.onProjectileHit(world, blockstate, (BlockHitResult)collision, this);
+        BlockState blockstate = world.getBlockState(collision.getBlockPos());
+        blockstate.onProjectileHit(world, blockstate, collision, this);
 
         int impactParticleCount = (int)(getVelocity().lengthSquared() / 20);
         if (impactParticleCount > 0) {
