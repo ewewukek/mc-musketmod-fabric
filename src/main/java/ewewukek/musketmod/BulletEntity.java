@@ -105,6 +105,7 @@ public class BulletEntity extends ThrownEntity {
         for (int i = 0; i != 10; ++i) {
             double t = Math.pow(random.nextFloat(), 1.5);
             Vec3d p = pos.add(front.multiply(1.25 + t));
+            p = p.add(new Vec3d(random.nextFloat() - 0.5, random.nextFloat() - 0.5, random.nextFloat() - 0.5).multiply(0.1));
             Vec3d v = front.multiply(0.1 * (1 - t));
             world.addParticle(ParticleTypes.POOF, p.x, p.y, p.z, v.x, v.y, v.z);
         }
