@@ -67,8 +67,6 @@ public class BulletEntity extends ThrownEntity {
             return;
         }
 
-        checkBlockCollision();
-
         Vec3d motion = getVelocity();
         double posX = getX() + motion.x;
         double posY = getY() + motion.y;
@@ -96,6 +94,7 @@ public class BulletEntity extends ThrownEntity {
 
         setVelocity(motion.multiply(friction));
         updatePosition(posX, posY, posZ);
+        checkBlockCollision();
     }
 
     private void fireParticles() {
