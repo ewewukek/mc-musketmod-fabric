@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "musketmod",
   "version": "${version}",
-  "name": "Musket Modr",
+  "name": "Musket Mod",
   "description": "Simple mod that adds a craftable musket",
   "authors": [
     "ewewukek"
