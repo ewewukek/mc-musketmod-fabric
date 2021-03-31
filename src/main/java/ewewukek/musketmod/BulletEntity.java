@@ -208,6 +208,7 @@ public class BulletEntity extends ThrownEntity {
         compound.putShort("ticksLeft", ticksLeft);
     }
 
+// Fabric {
     public void writeSpawnData(PacketByteBuf data) {
         data.writeVarInt(getEntityId());
         data.writeUuid(getUuid());
@@ -242,4 +243,5 @@ public class BulletEntity extends ThrownEntity {
         ticksLeft = data.readShort();
         doFireParticles = data.readByte() != 0;
     }
+// }
 }

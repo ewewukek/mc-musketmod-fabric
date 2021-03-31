@@ -192,12 +192,14 @@ public class MusketItem extends Item {
         bullet.setVelocity(motion);
         bullet.doFireParticles = true;
 
+// Fabric {
         PacketByteBuf buf = PacketByteBufs.create();
         bullet.writeSpawnData(buf);
         BlockPos blockPos = new BlockPos(pos);
         for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld)worldIn, blockPos)) {
             ServerPlayNetworking.send(serverPlayer, MusketMod.SPAWN_BULLET_PACKET_ID, buf);
         }
+// }
 
         worldIn.spawnEntity(bullet);
     }

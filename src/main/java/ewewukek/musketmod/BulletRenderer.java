@@ -1,5 +1,7 @@
 package ewewukek.musketmod;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -12,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 
+@Environment(EnvType.CLIENT)
 public class BulletRenderer extends EntityRenderer<BulletEntity> {
     public static final Identifier TEXTURE = new Identifier(MusketMod.MODID + ":textures/entity/bullet.png");
 
