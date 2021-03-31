@@ -192,7 +192,7 @@ public class MusketItem extends Item {
 
         BulletEntity bullet = new BulletEntity(worldIn);
         bullet.setOwner(player);
-        bullet.setPos(pos.x, pos.y, pos.z);
+        bullet.updatePosition(pos.x, pos.y, pos.z);
         bullet.setVelocity(motion);
         bullet.doFireParticles = true;
 
