@@ -170,9 +170,7 @@ public class MusketItem extends Item {
     private void fireBullet(World worldIn, PlayerEntity player) {
         final float deg2rad = 0.017453292f;
         Vec3d front = new Vec3d(0, 0, 1).rotateX(-deg2rad * player.pitch).rotateY(-deg2rad * player.yaw);
-
         Vec3d pos = new Vec3d(player.getX(), player.getEyeY(), player.getZ());
-        pos.add(front.multiply(0.2));
 
         float angle = (float) Math.PI * 2 * RANDOM.nextFloat();
         float gaussian = Math.abs((float) RANDOM.nextGaussian());
@@ -190,7 +188,6 @@ public class MusketItem extends Item {
         bullet.setOwner(player);
         bullet.updatePosition(pos.x, pos.y, pos.z);
         bullet.setVelocity(motion);
-        bullet.doFireParticles = true;
 
 // Fabric {
         PacketByteBuf buf = PacketByteBufs.create();

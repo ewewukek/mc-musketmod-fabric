@@ -34,7 +34,6 @@ public class BulletEntity extends ThrownEntity {
     public static float damageFactorMax;
 
     public short ticksLeft;
-    public boolean doFireParticles;
 
     public BulletEntity(EntityType<BulletEntity>entityType, World world) {
         super(entityType, world);
@@ -43,6 +42,10 @@ public class BulletEntity extends ThrownEntity {
 
     public BulletEntity(World world) {
         this(MusketMod.BULLET_ENTITY_TYPE, world);
+    }
+
+    public boolean isFirstTick() {
+        return ticksLeft == LIFETIME;
     }
 
     public DamageSource causeMusketDamage(BulletEntity bullet, Entity attacker) {
@@ -56,9 +59,8 @@ public class BulletEntity extends ThrownEntity {
             return;
         }
 
-        if (world.isClient && doFireParticles) {
+        if (world.isClient && isFirstTick()) {
             fireParticles();
-            doFireParticles = false;
         }
 
         if (--ticksLeft <= 0) {
@@ -223,7 +225,6 @@ public class BulletEntity extends ThrownEntity {
         data.writeFloat((float)motion.z);
 
         data.writeShort(ticksLeft);
-        data.writeByte(doFireParticles ? 1 : 0);
     }
 
     public void readSpawnData(PacketByteBuf data) {
@@ -241,7 +242,6 @@ public class BulletEntity extends ThrownEntity {
         setVelocity(motion);
 
         ticksLeft = data.readShort();
-        doFireParticles = data.readByte() != 0;
     }
 // }
 }
