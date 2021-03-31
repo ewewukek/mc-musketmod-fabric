@@ -165,18 +165,10 @@ public class MusketItem extends Item {
         }
     }
 
-    private Vec3d getPlayerFiringPoint(PlayerEntity player) {
-        Vec3d side = Vec3d.fromPolar(0, player.yaw + 90);
-        if (player.getActiveHand() == Hand.OFF_HAND) side = side.multiply(-1);
-        Vec3d down = Vec3d.fromPolar(player.pitch + 90, player.yaw);
-
-        return new Vec3d(player.getX(), player.getEyeY(), player.getZ())
-                .add(side.add(down).multiply(0.1));
-    }
-
     private void fireBullet(World worldIn, PlayerEntity player) {
-        Vec3d pos = getPlayerFiringPoint(player);
+        Vec3d pos = new Vec3d(player.getX(), player.getEyeY(), player.getZ());
         Vec3d front = Vec3d.fromPolar(player.pitch, player.yaw);
+        pos.add(front.multiply(0.2));
 
         float angle = (float) Math.PI * 2 * RANDOM.nextFloat();
         float gaussian = Math.abs((float) RANDOM.nextGaussian());
