@@ -2,11 +2,15 @@ package ewewukek.musketmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -49,5 +53,17 @@ public class MusketMod implements ModInitializer {
         Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "musket_load2"), SOUND_MUSKET_LOAD_2);
         Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "musket_ready"), SOUND_MUSKET_READY);
         Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "musket_fire"), SOUND_MUSKET_FIRE);
+
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return new Identifier(MODID, "reload");
+            }
+
+            @Override
+            public void apply(ResourceManager manager) {
+                Config.reload();
+            }
+        });
     }
 }
