@@ -174,22 +174,19 @@ public class BulletEntity extends ThrownEntity {
 
     private Entity closestEntityOnPath(Vec3d start, Vec3d end) {
         Vec3d motion = getVelocity();
-        Entity shooter = getOwner();
 
         Entity result = null;
-        double result_dist = motion.lengthSquared() + 0.05;
+        double result_dist = 0;
 
         Box aabbSelection = getBoundingBox().stretch(motion).expand(0.5);
         for (Entity entity : world.getOtherEntities(this, aabbSelection, getTargetPredicate())) {
-            if (entity != shooter) {
-                Box aabb = entity.getBoundingBox();
-                Optional<Vec3d> optional = aabb.raycast(start, end);
-                if (optional.isPresent()) {
-                    double dist = start.squaredDistanceTo(optional.get());
-                    if (dist < result_dist || result == null) {
-                        result = entity;
-                        result_dist = dist;
-                    }
+            Box aabb = entity.getBoundingBox();
+            Optional<Vec3d> optional = aabb.raycast(start, end);
+            if (optional.isPresent()) {
+                double dist = start.squaredDistanceTo(optional.get());
+                if (dist < result_dist || result == null) {
+                    result = entity;
+                    result_dist = dist;
                 }
             }
         }
