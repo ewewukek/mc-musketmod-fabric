@@ -166,8 +166,10 @@ public class MusketItem extends Item {
     }
 
     private void fireBullet(World worldIn, PlayerEntity player) {
+        final float deg2rad = 0.017453292f;
+        Vec3d front = new Vec3d(0, 0, 1).rotateX(-deg2rad * player.pitch).rotateY(-deg2rad * player.yaw);
+
         Vec3d pos = new Vec3d(player.getX(), player.getEyeY(), player.getZ());
-        Vec3d front = Vec3d.fromPolar(player.pitch, player.yaw);
         pos.add(front.multiply(0.2));
 
         float angle = (float) Math.PI * 2 * RANDOM.nextFloat();
