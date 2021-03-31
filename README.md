@@ -2,6 +2,8 @@
 
 Simple mod that adds a craftable musket. Use RMB to both load and fire. Doesn't work under water. [Download](https://github.com/ewewukek/mc-musketmod-forge/releases/latest)
 
+Requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api).
+
 #### Recipes (similar to other mods):
 
 ##### Gun barrel
