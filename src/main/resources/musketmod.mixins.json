@@ -4,7 +4,8 @@
   "package": "ewewukek.musketmod.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinHeldItemRenderer"
+    "MixinHeldItemRenderer",
+    "MixinPlayerEntityRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
