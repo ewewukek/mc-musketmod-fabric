@@ -30,8 +30,11 @@ public class BulletEntity extends ThrownEntity {
     static final double WATER_FRICTION = 0.6;
     static final short LIFETIME = 50;
 
+    private Vec3d origin;
+
     public static float damageFactorMin;
     public static float damageFactorMax;
+    public static double maxDistance;
 
     public short ticksLeft;
 
@@ -63,7 +66,11 @@ public class BulletEntity extends ThrownEntity {
             fireParticles();
         }
 
-        if (--ticksLeft <= 0) {
+        // for compatibility origin is not stored in world save
+        if (origin == null) origin = getPos();
+        double distanceTravelled = getPos().subtract(origin).length();
+
+        if (--ticksLeft <= 0 || distanceTravelled > maxDistance) {
             remove();
             return;
         }
