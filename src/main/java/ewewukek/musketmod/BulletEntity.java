@@ -30,13 +30,12 @@ public class BulletEntity extends ThrownEntity {
     static final double WATER_FRICTION = 0.6;
     static final short LIFETIME = 50;
 
-    private Vec3d origin;
-
     public static float damageFactorMin;
     public static float damageFactorMax;
     public static double maxDistance;
 
-    public short ticksLeft;
+    private float distanceTravelled;
+    private short ticksLeft;
 
     public BulletEntity(EntityType<BulletEntity>entityType, World world) {
         super(entityType, world);
@@ -62,10 +61,6 @@ public class BulletEntity extends ThrownEntity {
             return;
         }
 
-        // for compatibility origin is not stored in world save
-        if (origin == null) origin = getPos();
-        double distanceTravelled = getPos().subtract(origin).length();
-
         if (--ticksLeft <= 0 || distanceTravelled > maxDistance) {
             discard();
             return;
@@ -75,6 +70,7 @@ public class BulletEntity extends ThrownEntity {
         double posX = getX() + motion.x;
         double posY = getY() + motion.y;
         double posZ = getZ() + motion.z;
+        distanceTravelled += motion.length();
 
         motion = motion.subtract(0, GRAVITY, 0);
 
@@ -198,12 +194,14 @@ public class BulletEntity extends ThrownEntity {
     protected void readCustomDataFromNbt(NbtCompound compound) {
         super.readCustomDataFromNbt(compound);
         ticksLeft = compound.getShort("ticksLeft");
+        distanceTravelled = compound.getFloat("distanceTravelled");
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound compound) {
         super.writeCustomDataToNbt(compound);
         compound.putShort("ticksLeft", ticksLeft);
+        compound.putFloat("distanceTravelled", distanceTravelled);
     }
 
     // workaround for EntitySpawnS2CPacket.MAX_ABSOLUTE_VELOCITY
