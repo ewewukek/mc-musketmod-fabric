@@ -19,12 +19,12 @@ import net.minecraft.resources.ResourceLocation;
 public class BulletRenderer extends EntityRenderer<BulletEntity> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(MusketMod.MODID + ":textures/entity/bullet.png");
 
-    protected BulletRenderer(EntityRendererProvider.Context ctx) {
+    public BulletRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(BulletEntity entity) {
+    public ResourceLocation getTextureLocation(BulletEntity bullet) {
         return TEXTURE;
     }
 

@@ -26,8 +26,8 @@ public class MusketItem extends Item {
     public static float bulletStdDev;
     public static double bulletSpeed;
 
-    public MusketItem(Item.Properties settings) {
-        super(settings.defaultDurability(DURABILITY));
+    public MusketItem(Item.Properties properties) {
+        super(properties.defaultDurability(DURABILITY));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class MusketItem extends Item {
             world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_READY, SoundSource.PLAYERS, 0.8f, 1);
             setLoaded(stack, true);
         }
-   }
+    }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {

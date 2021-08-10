@@ -126,7 +126,6 @@ public class BulletEntity extends AbstractHurtingProjectile {
             if (target instanceof Player) {
                 Entity shooter = getOwner();
                 if (shooter instanceof Player && !((Player)shooter).canHarmPlayer((Player)target)) {
-
                     target = null;
                 }
             }
