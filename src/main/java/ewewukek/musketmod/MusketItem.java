@@ -53,7 +53,7 @@ public class MusketItem extends Item {
             if (!worldIn.isClient) {
                 fireBullet(worldIn, player);
             }
-            player.playSound(MusketMod.SOUND_MUSKET_FIRE, 1.5f, 1);
+            player.playSound(MusketMod.SOUND_MUSKET_FIRE, 3.5f, 1);
 
             damageItem(stack, player);
             setReady(stack, false);
@@ -91,15 +91,15 @@ public class MusketItem extends Item {
         double posZ = player.getZ();
 
         if (loadingStage == 0 && usingDuration >= LOADING_STAGE_1) {
-            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_LOAD_0, SoundCategory.PLAYERS, 0.5f, 1);
+            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_LOAD_0, SoundCategory.PLAYERS, 0.8f, 1);
             setLoadingStage(stack, 1);
 
         } else if (loadingStage == 1 && usingDuration >= LOADING_STAGE_2) {
-            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_LOAD_1, SoundCategory.PLAYERS, 0.5f, 1);
+            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_LOAD_1, SoundCategory.PLAYERS, 0.8f, 1);
             setLoadingStage(stack, 2);
 
         } else if (loadingStage == 2 && usingDuration >= LOADING_STAGE_3) {
-            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_LOAD_2, SoundCategory.PLAYERS, 0.5f, 1);
+            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_LOAD_2, SoundCategory.PLAYERS, 0.8f, 1);
             setLoadingStage(stack, 3);
         }
 
@@ -112,7 +112,7 @@ public class MusketItem extends Item {
                 if (ammoStack.isEmpty()) player.inventory.removeOne(ammoStack);
             }
 
-            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_READY, SoundCategory.PLAYERS, 0.5f, 1);
+            world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_READY, SoundCategory.PLAYERS, 0.8f, 1);
             setLoaded(stack, true);
         }
    }
