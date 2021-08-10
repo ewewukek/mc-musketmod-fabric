@@ -32,20 +32,18 @@ public class MusketMod implements ModInitializer {
     public static final SoundEvent SOUND_MUSKET_READY = new SoundEvent(new ResourceLocation(MODID, "musket_ready"));
     public static final SoundEvent SOUND_MUSKET_FIRE = new SoundEvent(new ResourceLocation(MODID, "musket_fire"));
 
-    public static final EntityType<BulletEntity> BULLET_ENTITY_TYPE = Registry.register(
-        Registry.ENTITY_TYPE,
-        new ResourceLocation(MODID, "bullet"),
-        FabricEntityTypeBuilder.<BulletEntity>create(MobCategory.MISC, BulletEntity::new)
-                .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
-                .trackRangeBlocks(64).trackedUpdateRate(5)
-                .forceTrackedVelocityUpdates(false)
-                .build()
-    );
+    public static final EntityType<BulletEntity> BULLET_ENTITY_TYPE = FabricEntityTypeBuilder.<BulletEntity>create(MobCategory.MISC, BulletEntity::new)
+            .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
+            .trackRangeBlocks(64).trackedUpdateRate(5)
+            .forceTrackedVelocityUpdates(false)
+            .build();
 
     @Override
     public void onInitialize() {
         Registry.register(Registry.ITEM, new ResourceLocation(MODID, "cartridge"), CARTRIDGE);
         Registry.register(Registry.ITEM, new ResourceLocation(MODID, "musket"), MUSKET);
+
+        Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(MODID, "bullet"), BULLET_ENTITY_TYPE);
 
         Registry.register(Registry.SOUND_EVENT, new ResourceLocation(MODID, "musket_load0"), SOUND_MUSKET_LOAD_0);
         Registry.register(Registry.SOUND_EVENT, new ResourceLocation(MODID, "musket_load1"), SOUND_MUSKET_LOAD_1);
