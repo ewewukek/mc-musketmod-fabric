@@ -5,13 +5,7 @@ Simple mod that adds a craftable musket. Use RMB to both load and fire. Doesn't 
 
 Requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api).
 
-#### Recipes (similar to other mods):
-
-##### Gun barrel
-![](doc/barrel_recipe.png?raw=true)
-
-##### Gunstock
-![](doc/gunstock_recipe.png?raw=true)
+#### Recipes:
 
 ##### Musket
 ![](doc/musket_recipe.png?raw=true)
