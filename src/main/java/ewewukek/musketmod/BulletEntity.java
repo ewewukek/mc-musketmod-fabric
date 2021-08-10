@@ -63,10 +63,6 @@ public class BulletEntity extends ThrownEntity {
             return;
         }
 
-        if (world.isClient && isFirstTick()) {
-            fireParticles();
-        }
-
         // for compatibility origin is not stored in world save
         if (origin == null) origin = getPos();
         double distanceTravelled = getPos().subtract(origin).length();
@@ -236,5 +232,6 @@ public class BulletEntity extends ThrownEntity {
         super.onSpawnPacket(packet);
         Vec3d packet_velocity = new Vec3d(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
         setVelocity(packet_velocity.multiply(MusketItem.bulletSpeed / EntitySpawnS2CPacket.MAX_ABSOLUTE_VELOCITY));
+        fireParticles();
     }
 }
