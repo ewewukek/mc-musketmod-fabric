@@ -174,6 +174,14 @@ public class BulletEntity extends ThrownEntity {
         for (Entity entity : world.getOtherEntities(this, aabbSelection, this::canHit)) {
             Box aabb = entity.getBoundingBox();
             Optional<Vec3d> optional = aabb.raycast(start, end);
+            if (!optional.isPresent()) {
+                aabb = aabb.offset( // previous tick position
+                    entity.prevX - entity.getX(),
+                    entity.prevY - entity.getY(),
+                    entity.prevZ - entity.getZ()
+                );
+                optional = aabb.raycast(start, end);
+            }
             if (optional.isPresent()) {
                 double dist = start.squaredDistanceTo(optional.get());
                 if (dist < result_dist || result == null) {
