@@ -21,7 +21,9 @@
     "musketmod.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.7.0",
+    "minecraft": "1.17.x",
+    "java": ">=16",
+    "fabricloader": ">=0.11.3",
     "fabric-api-base": ">=0.1.0",
     "fabric-networking-api-v1": ">=0.1.0",
     "fabric-object-builder-api-v1": ">=0.1.0",
