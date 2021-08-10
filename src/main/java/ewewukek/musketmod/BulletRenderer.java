@@ -6,20 +6,20 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class BulletRenderer extends EntityRenderer<BulletEntity> {
     public static final Identifier TEXTURE = new Identifier(MusketMod.MODID + ":textures/entity/bullet.png");
 
-    protected BulletRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    protected BulletRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BulletRenderer extends EntityRenderer<BulletEntity> {
         matrixStack.scale(0.1f, 0.1f, 0.1f);
         // billboarding
         matrixStack.multiply(dispatcher.getRotation());
-        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
 
         MatrixStack.Entry entry = matrixStack.peek();
         Matrix4f positionMatrix = entry.getModel();

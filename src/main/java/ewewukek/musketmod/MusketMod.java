@@ -61,7 +61,7 @@ public class MusketMod implements ModInitializer {
             }
 
             @Override
-            public void apply(ResourceManager manager) {
+            public void reload(ResourceManager manager) {
                 Config.reload();
             }
         });

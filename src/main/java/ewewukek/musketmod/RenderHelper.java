@@ -7,11 +7,11 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class RenderHelper {
@@ -23,7 +23,7 @@ public class RenderHelper {
         boolean isRightHand = handside == Arm.RIGHT;
         float sign = isRightHand ? 1 : -1;
 
-        int slot = player.inventory.selectedSlot;
+        int slot = player.getInventory().selectedSlot;
         boolean slotChanged = slot != previousSlot;
         ItemStack clientStack = hand == Hand.MAIN_HAND ? player.getMainHandStack() : player.getOffHandStack();
         if (slotChanged || clientStack.isEmpty() || clientStack.getItem() != MusketMod.MUSKET) equipCycleCompleted = false;
@@ -34,7 +34,7 @@ public class RenderHelper {
             float swingSharp = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float)Math.PI);
             float swingNormal = MathHelper.sin(swingProgress * (float)Math.PI);
             matrixStack.translate(sign * (0.2f - 0.05f * swingNormal), -0.2f - 0.05f * swingNormal, -0.3f - 0.4f * swingSharp);
-            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(180 + sign * (20 - 20 * swingSharp)));
+            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180 + sign * (20 - 20 * swingSharp)));
 
         } else {
             float usingDuration = stack.getMaxUseTime() - (player.getItemUseTimeLeft() - partialTicks + 1);
@@ -42,8 +42,8 @@ public class RenderHelper {
                                 && usingDuration > 0 && usingDuration < MusketItem.RELOAD_DURATION;
             if (isLoading) {
                 matrixStack.translate(sign * 0.15f, -0.55f, -0.3f);
-                matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(60));
-                matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(10));
+                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(60));
+                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(10));
 
                 if (usingDuration >= 8 && usingDuration <= 14 || usingDuration >= 18 && usingDuration <= 24) {
                     if (usingDuration >= 18) usingDuration -= 10;
@@ -75,7 +75,7 @@ public class RenderHelper {
 
         // compensate rotated model
         matrixStack.translate(0, 0.085f, 0);
-        matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-70));
+        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-70));
 
         renderer.renderItem(player, stack, isRightHand ? ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND : ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, !isRightHand, matrixStack, render, packedLight);
 

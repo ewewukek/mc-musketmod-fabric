@@ -11,7 +11,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.ProjectileDamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -58,7 +58,7 @@ public class BulletEntity extends ThrownEntity {
     @Override
     public void tick() {
         if (!world.isClient && processCollision()) {
-            remove();
+            discard();
             return;
         }
 
@@ -71,7 +71,7 @@ public class BulletEntity extends ThrownEntity {
         double distanceTravelled = getPos().subtract(origin).length();
 
         if (--ticksLeft <= 0 || distanceTravelled > maxDistance) {
-            remove();
+            discard();
             return;
         }
 
@@ -206,20 +206,20 @@ public class BulletEntity extends ThrownEntity {
     }
 
     @Override
-    protected void readCustomDataFromTag(CompoundTag compound) {
-        super.readCustomDataFromTag(compound);
+    protected void readCustomDataFromNbt(NbtCompound compound) {
+        super.readCustomDataFromNbt(compound);
         ticksLeft = compound.getShort("ticksLeft");
     }
 
     @Override
-    protected void writeCustomDataToTag(CompoundTag compound) {
-        super.writeCustomDataToTag(compound);
+    protected void writeCustomDataToNbt(NbtCompound compound) {
+        super.writeCustomDataToNbt(compound);
         compound.putShort("ticksLeft", ticksLeft);
     }
 
 // Fabric {
     public void writeSpawnData(PacketByteBuf data) {
-        data.writeVarInt(getEntityId());
+        data.writeVarInt(getId());
         data.writeUuid(getUuid());
 
         data.writeDouble(getX());
@@ -235,7 +235,7 @@ public class BulletEntity extends ThrownEntity {
     }
 
     public void readSpawnData(PacketByteBuf data) {
-        setEntityId(data.readVarInt());
+        setId(data.readVarInt());
         setUuid(data.readUuid());
 
         double x = data.readDouble();

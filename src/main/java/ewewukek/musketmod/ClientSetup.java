@@ -11,16 +11,16 @@ public class ClientSetup implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.INSTANCE.register(MusketMod.BULLET_ENTITY_TYPE, (dispatcher, context) -> new BulletRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(MusketMod.BULLET_ENTITY_TYPE, (ctx) -> new BulletRenderer(ctx));
 
         ClientPlayNetworking.registerGlobalReceiver(MusketMod.SPAWN_BULLET_PACKET_ID, (client, handler, buf, responseSender) -> {
             ClientWorld world = handler.getWorld();
             BulletEntity bullet = new BulletEntity(world);
             bullet.readSpawnData(buf);
-            world.addEntity(bullet.getEntityId(), bullet);
+            world.addEntity(bullet.getId(), bullet);
         });
 
-        FabricModelPredicateProviderRegistry.register(MusketMod.MUSKET, new Identifier("loaded"), (stack, world, player) -> {
+        FabricModelPredicateProviderRegistry.register(MusketMod.MUSKET, new Identifier("loaded"), (stack, world, player, seed) -> {
             return MusketItem.isLoaded(stack) ? 1 : 0;
         });
     }

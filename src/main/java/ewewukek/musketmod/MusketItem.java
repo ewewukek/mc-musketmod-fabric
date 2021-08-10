@@ -8,7 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -40,7 +40,7 @@ public class MusketItem extends Item {
         if (hand != Hand.MAIN_HAND) return super.use(worldIn, player, hand);
 
         ItemStack stack = player.getStackInHand(hand);
-        boolean creative = player.abilities.creativeMode;
+        boolean creative = player.getAbilities().creativeMode;
 
         if (player.isSubmergedIn(FluidTags.WATER) && !creative) {
             return TypedActionResult.fail(stack);
@@ -104,12 +104,12 @@ public class MusketItem extends Item {
         }
 
         if (usingDuration >= RELOAD_DURATION && !isLoaded(stack)) {
-            if (!player.abilities.creativeMode) {
+            if (!player.getAbilities().creativeMode) {
                 ItemStack ammoStack = findAmmo(player);
                 if (ammoStack.isEmpty()) return;
 
                 ammoStack.decrement(1);
-                if (ammoStack.isEmpty()) player.inventory.removeOne(ammoStack);
+                if (ammoStack.isEmpty()) player.getInventory().removeOne(ammoStack);
             }
 
             world.playSound(null, posX, posY, posZ, MusketMod.SOUND_MUSKET_READY, SoundCategory.PLAYERS, 0.5f, 1);
@@ -137,12 +137,12 @@ public class MusketItem extends Item {
     }
 
     public static boolean isLoaded(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         return tag != null && tag.getByte("loaded") == 1;
     }
 
     public static boolean isReady(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         return tag != null && tag.getByte("ready") == 1;
     }
 
@@ -158,8 +158,8 @@ public class MusketItem extends Item {
             return player.getStackInHand(Hand.MAIN_HAND);
 
         } else {
-            for (int i = 0; i != player.inventory.main.size(); ++i) {
-                ItemStack itemstack = player.inventory.main.get(i);
+            for (int i = 0; i != player.getInventory().main.size(); ++i) {
+                ItemStack itemstack = player.getInventory().main.get(i);
                 if (isAmmo(itemstack)) return itemstack;
             }
 
@@ -169,11 +169,11 @@ public class MusketItem extends Item {
 
     private void fireBullet(World worldIn, PlayerEntity player) {
         final float deg2rad = 0.017453292f;
-        Vec3d front = new Vec3d(0, 0, 1).rotateX(-deg2rad * player.pitch).rotateY(-deg2rad * player.yaw);
+        Vec3d front = new Vec3d(0, 0, 1).rotateX(-deg2rad * player.getPitch()).rotateY(-deg2rad * player.getYaw());
         Vec3d pos = new Vec3d(player.getX(), player.getEyeY(), player.getZ());
 
-        float angle = (float) Math.PI * 2 * RANDOM.nextFloat();
-        float gaussian = Math.abs((float) RANDOM.nextGaussian());
+        float angle = (float) Math.PI * 2 * worldIn.getRandom().nextFloat();
+        float gaussian = Math.abs((float) worldIn.getRandom().nextGaussian());
         if (gaussian > 4) gaussian = 4;
 
         front = front.rotateX(bulletStdDev * gaussian * MathHelper.sin(angle))
@@ -202,18 +202,18 @@ public class MusketItem extends Item {
     }
 
     private void setLoaded(ItemStack stack, boolean loaded) {
-        stack.getOrCreateTag().putByte("loaded", (byte) (loaded ? 1 : 0));
+        stack.getOrCreateNbt().putByte("loaded", (byte) (loaded ? 1 : 0));
     }
 
     private void setReady(ItemStack stack, boolean ready) {
-        stack.getOrCreateTag().putByte("ready", (byte) (ready ? 1 : 0));
+        stack.getOrCreateNbt().putByte("ready", (byte) (ready ? 1 : 0));
     }
 
     private void setLoadingStage(ItemStack stack, int loadingStage) {
-        stack.getOrCreateTag().putInt("loadingStage", loadingStage);
+        stack.getOrCreateNbt().putInt("loadingStage", loadingStage);
     }
 
     private int getLoadingStage(ItemStack stack) {
-        return stack.getOrCreateTag().getInt("loadingStage");
+        return stack.getOrCreateNbt().getInt("loadingStage");
     }
 }
