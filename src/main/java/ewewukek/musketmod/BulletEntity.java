@@ -201,14 +201,12 @@ public class BulletEntity extends ThrownEntity {
     @Override
     protected void readCustomDataFromNbt(NbtCompound compound) {
         super.readCustomDataFromNbt(compound);
-        ticksLeft = compound.getShort("ticksLeft");
         distanceTravelled = compound.getFloat("distanceTravelled");
     }
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound compound) {
         super.writeCustomDataToNbt(compound);
-        compound.putShort("ticksLeft", ticksLeft);
         compound.putFloat("distanceTravelled", distanceTravelled);
     }
 
