@@ -2,7 +2,6 @@ package ewewukek.musketmod;
 
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.Predicate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -169,13 +168,6 @@ public class BulletEntity extends ThrownEntity {
         target.damage(damagesource, energy * factor);
     }
 
-    private Predicate<Entity> getTargetPredicate() {
-        Entity shooter = getOwner();
-        return (entity) -> {
-            return !entity.isSpectator() && entity.isAlive() && entity.collides() && entity != shooter;
-        };
-    }
-
     private Entity closestEntityOnPath(Vec3d start, Vec3d end) {
         Vec3d motion = getVelocity();
 
@@ -183,7 +175,7 @@ public class BulletEntity extends ThrownEntity {
         double result_dist = 0;
 
         Box aabbSelection = getBoundingBox().stretch(motion).expand(0.5);
-        for (Entity entity : world.getOtherEntities(this, aabbSelection, getTargetPredicate())) {
+        for (Entity entity : world.getOtherEntities(this, aabbSelection, this::canHit)) {
             Box aabb = entity.getBoundingBox();
             Optional<Vec3d> optional = aabb.raycast(start, end);
             if (optional.isPresent()) {
