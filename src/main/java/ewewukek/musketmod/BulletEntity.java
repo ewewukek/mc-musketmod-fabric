@@ -35,11 +35,10 @@ public class BulletEntity extends ThrownEntity {
     public static double maxDistance;
 
     private float distanceTravelled;
-    private short ticksLeft;
+    private short tickCounter;
 
     public BulletEntity(EntityType<BulletEntity>entityType, World world) {
         super(entityType, world);
-        ticksLeft = LIFETIME;
     }
 
     public BulletEntity(World world) {
@@ -47,7 +46,7 @@ public class BulletEntity extends ThrownEntity {
     }
 
     public boolean isFirstTick() {
-        return ticksLeft == LIFETIME;
+        return tickCounter == 0;
     }
 
     public DamageSource causeMusketDamage(BulletEntity bullet, Entity attacker) {
@@ -61,7 +60,7 @@ public class BulletEntity extends ThrownEntity {
             return;
         }
 
-        if (--ticksLeft <= 0 || distanceTravelled > maxDistance) {
+        if (++tickCounter >= LIFETIME || distanceTravelled > maxDistance) {
             discard();
             return;
         }
