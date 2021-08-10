@@ -39,8 +39,6 @@ public class MusketMod implements ModInitializer {
                 .build()
     );
 
-    public static final Identifier SPAWN_BULLET_PACKET_ID = new Identifier(MusketMod.MODID, "spawn_bullet");
-
     @Override
     public void onInitialize() {
         Registry.register(Registry.ITEM, new Identifier(MODID, "barrel"), BARREL);

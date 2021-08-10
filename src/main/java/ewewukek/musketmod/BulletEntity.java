@@ -12,7 +12,8 @@ import net.minecraft.entity.damage.ProjectileDamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -217,38 +218,23 @@ public class BulletEntity extends ThrownEntity {
         compound.putShort("ticksLeft", ticksLeft);
     }
 
-// Fabric {
-    public void writeSpawnData(PacketByteBuf data) {
-        data.writeVarInt(getId());
-        data.writeUuid(getUuid());
-
-        data.writeDouble(getX());
-        data.writeDouble(getY());
-        data.writeDouble(getZ());
-
-        Vec3d motion = getVelocity();
-        data.writeFloat((float)motion.x);
-        data.writeFloat((float)motion.y);
-        data.writeFloat((float)motion.z);
-
-        data.writeShort(ticksLeft);
+    // workaround for EntitySpawnS2CPacket.MAX_ABSOLUTE_VELOCITY
+    @Override
+    public Packet<?> createSpawnPacket() {
+        Entity owner = getOwner();
+        return new EntitySpawnS2CPacket(
+            getId(), getUuid(),
+            getX(), getY(), getZ(),
+            getPitch(), getYaw(),
+            getType(), owner != null ? owner.getId() : 0,
+            getVelocity().multiply(EntitySpawnS2CPacket.MAX_ABSOLUTE_VELOCITY / MusketItem.bulletSpeed)
+        );
     }
 
-    public void readSpawnData(PacketByteBuf data) {
-        setId(data.readVarInt());
-        setUuid(data.readUuid());
-
-        double x = data.readDouble();
-        double y = data.readDouble();
-        double z = data.readDouble();
-        setPos(x, y, z);
-        updateTrackedPosition(x, y, z);
-        refreshPositionAfterTeleport(x, y, z);
-
-        Vec3d motion = new Vec3d(data.readFloat(), data.readFloat(), data.readFloat());
-        setVelocity(motion);
-
-        ticksLeft = data.readShort();
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        super.onSpawnPacket(packet);
+        Vec3d packet_velocity = new Vec3d(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
+        setVelocity(packet_velocity.multiply(MusketItem.bulletSpeed / EntitySpawnS2CPacket.MAX_ABSOLUTE_VELOCITY));
     }
-// }
 }

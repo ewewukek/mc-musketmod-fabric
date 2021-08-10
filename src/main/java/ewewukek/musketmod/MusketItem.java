@@ -1,17 +1,11 @@
 package ewewukek.musketmod;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Hand;
@@ -188,15 +182,6 @@ public class MusketItem extends Item {
         bullet.setOwner(player);
         bullet.updatePosition(pos.x, pos.y, pos.z);
         bullet.setVelocity(motion);
-
-// Fabric {
-        PacketByteBuf buf = PacketByteBufs.create();
-        bullet.writeSpawnData(buf);
-        BlockPos blockPos = new BlockPos(pos);
-        for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld)worldIn, blockPos)) {
-            ServerPlayNetworking.send(serverPlayer, MusketMod.SPAWN_BULLET_PACKET_ID, buf);
-        }
-// }
 
         worldIn.spawnEntity(bullet);
     }
