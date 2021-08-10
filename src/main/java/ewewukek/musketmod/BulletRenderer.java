@@ -1,64 +1,65 @@
 package ewewukek.musketmod;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class BulletRenderer extends EntityRenderer<BulletEntity> {
-    public static final Identifier TEXTURE = new Identifier(MusketMod.MODID + ":textures/entity/bullet.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(MusketMod.MODID + ":textures/entity/bullet.png");
 
-    protected BulletRenderer(EntityRendererFactory.Context ctx) {
+    protected BulletRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public Identifier getTexture(BulletEntity entity) {
+    public ResourceLocation getTextureLocation(BulletEntity entity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(BulletEntity bullet, float yaw, float partialTicks, MatrixStack matrixStack, VertexConsumerProvider render, int packedLight) {
+    public void render(BulletEntity bullet, float yaw, float partialTicks, PoseStack matrixStack, MultiBufferSource render, int packedLight) {
         if (bullet.isFirstTick()) return;
 
-        matrixStack.push();
+        matrixStack.pushPose();
 
         matrixStack.scale(0.1f, 0.1f, 0.1f);
         // billboarding
-        matrixStack.multiply(dispatcher.getRotation());
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+        matrixStack.mulPose(entityRenderDispatcher.cameraOrientation());
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
 
-        MatrixStack.Entry entry = matrixStack.peek();
-        Matrix4f positionMatrix = entry.getModel();
-        Matrix3f normalMatrix = entry.getNormal();
+        PoseStack.Pose entry = matrixStack.last();
+        Matrix4f positionMatrix = entry.pose();
+        Matrix3f normalMatrix = entry.normal();
 
-        VertexConsumer builder = render.getBuffer(RenderLayer.getEntityCutout(getTexture(bullet)));
+        VertexConsumer builder = render.getBuffer(RenderType.entityCutout(getTextureLocation(bullet)));
 
         addVertex(builder, positionMatrix, normalMatrix, -1, -1, 0, 0, 1, 0, 0, 1, packedLight);
         addVertex(builder, positionMatrix, normalMatrix,  1, -1, 0, 1, 1, 0, 0, 1, packedLight);
         addVertex(builder, positionMatrix, normalMatrix,  1,  1, 0, 1, 0, 0, 0, 1, packedLight);
         addVertex(builder, positionMatrix, normalMatrix, -1,  1, 0, 0, 0, 0, 0, 1, packedLight);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     void addVertex(VertexConsumer builder, Matrix4f positionMatrix, Matrix3f normalMatrix, float x, float y, float z, float u, float v, float nx, float ny, float nz, int packedLight) {
         builder.vertex(positionMatrix, x, y, z)
                .color(255, 255, 255, 255)
-               .texture(u, v)
-               .overlay(OverlayTexture.DEFAULT_UV)
-               .light(packedLight)
+               .uv(u, v)
+               .overlayCoords(OverlayTexture.NO_OVERLAY)
+               .uv2(packedLight)
                .normal(normalMatrix, nx, ny, nz)
-               .next();
+               .endVertex();
     }
 }

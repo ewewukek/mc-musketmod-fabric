@@ -7,24 +7,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import ewewukek.musketmod.MusketItem;
 import ewewukek.musketmod.MusketMod;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
-@Mixin(PlayerEntityRenderer.class)
+@Mixin(PlayerRenderer.class)
 public class MixinPlayerEntityRenderer {
     @Inject(
         method = "getArmPose",
         at = @At("HEAD"),
         cancellable = true
     )
-    private static void getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> ci) {
-        if (!player.handSwinging && hand == Hand.MAIN_HAND) {
-            ItemStack stack = player.getStackInHand(hand);
+    private static void getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> ci) {
+        if (!player.swinging && hand == InteractionHand.MAIN_HAND) {
+            ItemStack stack = player.getMainHandItem();
             if (!stack.isEmpty() && stack.getItem() == MusketMod.MUSKET && MusketItem.isLoaded(stack)) {
-                ci.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
+                ci.setReturnValue(HumanoidModel.ArmPose.CROSSBOW_HOLD);
                 ci.cancel();
             }
         }
