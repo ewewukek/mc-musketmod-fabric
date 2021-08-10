@@ -113,7 +113,7 @@ public class MusketItem extends Item {
 
     @Override
     public boolean postMine(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-        if (!worldIn.isClient && entityLiving instanceof PlayerEntity && state.getHardness(worldIn, pos) != 0.0f) {
+        if (!worldIn.isClient && entityLiving instanceof PlayerEntity && state.getHardness(worldIn, pos) != 0) {
             damageItem(stack, (PlayerEntity) entityLiving);
         }
         return false;
