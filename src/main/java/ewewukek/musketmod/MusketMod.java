@@ -2,6 +2,7 @@ package ewewukek.musketmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.entity.EntityDimensions;
@@ -47,6 +48,8 @@ public class MusketMod implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "stock"), STOCK);
         Registry.register(Registry.ITEM, new Identifier(MODID, "cartridge"), CARTRIDGE);
         Registry.register(Registry.ITEM, new Identifier(MODID, "musket"), MUSKET);
+
+        FuelRegistry.INSTANCE.add(STOCK, 200);
 
         Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "musket_load0"), SOUND_MUSKET_LOAD_0);
         Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "musket_load1"), SOUND_MUSKET_LOAD_1);
