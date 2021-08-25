@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import ewewukek.musketmod.MusketItem;
-import ewewukek.musketmod.MusketMod;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -23,7 +22,7 @@ public class MixinPlayerEntityRenderer {
     private static void getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> ci) {
         if (!player.swinging && hand == InteractionHand.MAIN_HAND) {
             ItemStack stack = player.getMainHandItem();
-            if (!stack.isEmpty() && stack.getItem() == MusketMod.MUSKET && MusketItem.isLoaded(stack)) {
+            if (!stack.isEmpty() && stack.getItem() instanceof MusketItem && MusketItem.isLoaded(stack)) {
                 ci.setReturnValue(HumanoidModel.ArmPose.CROSSBOW_HOLD);
                 ci.cancel();
             }
