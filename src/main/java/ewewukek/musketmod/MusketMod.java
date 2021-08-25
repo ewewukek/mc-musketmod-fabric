@@ -37,12 +37,14 @@ public class MusketMod implements ModInitializer {
     public static final Item CARTRIDGE = new Item(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT));
     public static final Item MUSKET = new MusketItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), false);
     public static final Item MUSKET_WITH_BAYONET = new MusketItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT), true);
+    public static final Item PISTOL = new PistolItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT));
 
     public static final SoundEvent SOUND_MUSKET_LOAD_0 = new SoundEvent(new ResourceLocation(MODID, "musket_load0"));
     public static final SoundEvent SOUND_MUSKET_LOAD_1 = new SoundEvent(new ResourceLocation(MODID, "musket_load1"));
     public static final SoundEvent SOUND_MUSKET_LOAD_2 = new SoundEvent(new ResourceLocation(MODID, "musket_load2"));
     public static final SoundEvent SOUND_MUSKET_READY = new SoundEvent(new ResourceLocation(MODID, "musket_ready"));
     public static final SoundEvent SOUND_MUSKET_FIRE = new SoundEvent(new ResourceLocation(MODID, "musket_fire"));
+    public static final SoundEvent SOUND_PISTOL_FIRE = new SoundEvent(new ResourceLocation(MODID, "pistol_fire"));
 
     public static final EntityType<BulletEntity> BULLET_ENTITY_TYPE = FabricEntityTypeBuilder.<BulletEntity>create(MobCategory.MISC, BulletEntity::new)
             .dimensions(EntityDimensions.fixed(0.5F, 0.5F))
@@ -55,6 +57,7 @@ public class MusketMod implements ModInitializer {
         Registry.register(Registry.ITEM, new ResourceLocation(MODID, "cartridge"), CARTRIDGE);
         Registry.register(Registry.ITEM, new ResourceLocation(MODID, "musket"), MUSKET);
         Registry.register(Registry.ITEM, new ResourceLocation(MODID, "musket_with_bayonet"), MUSKET_WITH_BAYONET);
+        Registry.register(Registry.ITEM, new ResourceLocation(MODID, "pistol"), PISTOL);
 
         Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(MODID, "bullet"), BULLET_ENTITY_TYPE);
 
@@ -63,6 +66,7 @@ public class MusketMod implements ModInitializer {
         Registry.register(Registry.SOUND_EVENT, new ResourceLocation(MODID, "musket_load2"), SOUND_MUSKET_LOAD_2);
         Registry.register(Registry.SOUND_EVENT, new ResourceLocation(MODID, "musket_ready"), SOUND_MUSKET_READY);
         Registry.register(Registry.SOUND_EVENT, new ResourceLocation(MODID, "musket_fire"), SOUND_MUSKET_FIRE);
+        Registry.register(Registry.SOUND_EVENT, new ResourceLocation(MODID, "pistol_fire"), SOUND_PISTOL_FIRE);
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
             @Override

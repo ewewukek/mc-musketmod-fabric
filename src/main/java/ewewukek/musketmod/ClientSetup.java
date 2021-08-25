@@ -20,6 +20,7 @@ public class ClientSetup implements ClientModInitializer {
         };
         FabricModelPredicateProviderRegistry.register(MusketMod.MUSKET, new ResourceLocation("loaded"), loaded);
         FabricModelPredicateProviderRegistry.register(MusketMod.MUSKET_WITH_BAYONET, new ResourceLocation("loaded"), loaded);
+        FabricModelPredicateProviderRegistry.register(MusketMod.PISTOL, new ResourceLocation("loaded"), loaded);
 
         ClientPlayNetworking.registerGlobalReceiver(MusketMod.SMOKE_EFFECT_PACKET_ID, (client, handler, buf, responseSender) -> {
             ClientLevel world = handler.getLevel();
