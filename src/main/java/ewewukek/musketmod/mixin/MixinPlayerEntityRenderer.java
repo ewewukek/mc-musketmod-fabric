@@ -20,9 +20,11 @@ public class MixinPlayerEntityRenderer {
         cancellable = true
     )
     private static void getArmPose(AbstractClientPlayer player, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> ci) {
-        if (!player.swinging && hand == InteractionHand.MAIN_HAND) {
-            ItemStack stack = player.getMainHandItem();
-            if (!stack.isEmpty() && stack.getItem() instanceof GunItem && GunItem.isLoaded(stack)) {
+        if (player.swinging) return;
+        ItemStack stack = player.getItemInHand(hand);
+        if (!stack.isEmpty() && stack.getItem() instanceof GunItem) {
+            GunItem gunItem = (GunItem)stack.getItem();
+            if (gunItem.canUseFrom(player, hand) && GunItem.isLoaded(stack)) {
                 ci.setReturnValue(HumanoidModel.ArmPose.CROSSBOW_HOLD);
                 ci.cancel();
             }
