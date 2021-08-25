@@ -27,7 +27,8 @@ public abstract class GunItem extends Item {
     public static final int RELOAD_DURATION = 30;
 
     // for RenderHelper
-    public static ItemStack activeStack;
+    public static ItemStack activeMainHandStack;
+    public static ItemStack activeOffhandStack;
 
     public GunItem(Properties properties) {
         super(properties);
@@ -65,10 +66,6 @@ public abstract class GunItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        if (worldIn.isClientSide) {
-            activeStack = stack;
-        }
-
         boolean haveAmmo = !findAmmo(player).isEmpty() || creative;
         boolean loaded = isLoaded(stack);
 
@@ -88,11 +85,16 @@ public abstract class GunItem extends Item {
                 entity.broadcastBreakEvent(hand);
             });
 
+            if (worldIn.isClientSide) setActiveStack(hand, stack);
+
             return InteractionResultHolder.consume(stack);
 
         } else if (haveAmmo) {
             setLoadingStage(stack, 1);
+
             player.startUsingItem(hand);
+            if (worldIn.isClientSide) setActiveStack(hand, stack);
+
             return InteractionResultHolder.consume(stack);
 
         } else {
@@ -108,10 +110,6 @@ public abstract class GunItem extends Item {
     @Override
     public void onUseTick(Level world, LivingEntity entity, ItemStack stack, int timeLeft) {
         if (!(entity instanceof Player)) return;
-
-        if (world.isClientSide) {
-            activeStack = stack;
-        }
 
         Player player = (Player) entity;
         int usingDuration = getUseDuration(stack) - timeLeft;
@@ -130,7 +128,10 @@ public abstract class GunItem extends Item {
             setLoadingStage(stack, 4);
         }
 
-        if (world.isClientSide) return;
+        if (world.isClientSide) {
+            setActiveStack(player.getUsedItemHand(), stack);
+            return;
+        }
 
         if (usingDuration >= RELOAD_DURATION && !isLoaded(stack)) {
             if (!player.getAbilities().instabuild) {
@@ -222,6 +223,22 @@ public abstract class GunItem extends Item {
             p = p.add(new Vec3(random.nextFloat() - 0.5, random.nextFloat() - 0.5, random.nextFloat() - 0.5).scale(0.1));
             Vec3 v = direction.scale(0.1 * (1 - t));
             world.addParticle(ParticleTypes.POOF, p.x, p.y, p.z, v.x, v.y, v.z);
+        }
+    }
+
+    public static ItemStack getActiveStack(InteractionHand hand) {
+        if (hand == InteractionHand.MAIN_HAND) {
+            return activeMainHandStack;
+        } else {
+            return activeOffhandStack;
+        }
+    }
+
+    public static void setActiveStack(InteractionHand hand, ItemStack stack) {
+        if (hand == InteractionHand.MAIN_HAND) {
+            activeMainHandStack = stack;
+        } else {
+            activeOffhandStack = stack;
         }
     }
 
