@@ -16,7 +16,7 @@ public class ClientSetup implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(MusketMod.BULLET_ENTITY_TYPE, (ctx) -> new BulletRenderer(ctx));
 
         ClampedItemPropertyFunction loaded = (stack, world, player, seed) -> {
-            return MusketItem.isLoaded(stack) ? 1 : 0;
+            return GunItem.isLoaded(stack) ? 1 : 0;
         };
         FabricModelPredicateProviderRegistry.register(MusketMod.MUSKET, new ResourceLocation("loaded"), loaded);
         FabricModelPredicateProviderRegistry.register(MusketMod.MUSKET_WITH_BAYONET, new ResourceLocation("loaded"), loaded);
@@ -25,7 +25,7 @@ public class ClientSetup implements ClientModInitializer {
             ClientLevel world = handler.getLevel();
             Vec3 origin = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
             Vec3 direction = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
-            MusketItem.fireParticles(world, origin, direction);
+            GunItem.fireParticles(world, origin, direction);
         });
     }
 }
