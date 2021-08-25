@@ -5,12 +5,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvent;
@@ -19,8 +26,10 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.Vec3;
 
 public class MusketMod implements ModInitializer {
     public static final String MODID = "musketmod";
@@ -72,5 +81,22 @@ public class MusketMod implements ModInitializer {
                 }, gameExecutor);
             }
         });
+    }
+
+    public static final ResourceLocation SMOKE_EFFECT_PACKET_ID = new ResourceLocation(MODID, "smoke_effect");
+
+    public static void sendSmokeEffect(Player player, Vec3 origin, Vec3 direction) {
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeFloat((float)origin.x);
+        buf.writeFloat((float)origin.y);
+        buf.writeFloat((float)origin.z);
+        buf.writeFloat((float)direction.x);
+        buf.writeFloat((float)direction.y);
+        buf.writeFloat((float)direction.z);
+        BlockPos blockPos = new BlockPos(origin);
+        for (ServerPlayer serverPlayer : PlayerLookup.tracking((ServerLevel)player.level, blockPos)) {
+            ServerPlayNetworking.send(serverPlayer, SMOKE_EFFECT_PACKET_ID, buf);
+        }
+
     }
 }
