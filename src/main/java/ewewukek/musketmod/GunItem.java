@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -222,7 +221,7 @@ public abstract class GunItem extends Item {
         bullet.damageMultiplier = t * damageMultiplierMin() + (1 - t) * damageMultiplierMax();
 
         level.addFreshEntity(bullet);
-        MusketMod.sendSmokeEffect((ServerLevel)level, origin.add(smokeOriginOffset), direction);
+        MusketMod.sendSmokeEffect(shooter, origin.add(smokeOriginOffset), direction);
     }
 
     public static void fireParticles(Level world, Vec3 origin, Vec3 direction) {
